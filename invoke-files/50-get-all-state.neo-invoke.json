@@ -1,0 +1,6 @@
+[
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "getAllStateJson"
+  }
+]

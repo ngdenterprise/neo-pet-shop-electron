@@ -1,0 +1,45 @@
+{
+  "name": "neo-pet-shop-electron",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/bs58check": "^2.1.0",
+    "@types/node": "^12.20.11",
+    "@types/react": "^17.0.4",
+    "@types/react-dom": "^17.0.3",
+    "bs58check": "^2.1.2",
+    "concurrently": "^6.1.0",
+    "electron": "^12.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "build": "npm run buildweb && npm run buildelectron && npm run buildcontract",
+    "buildcontract": "cd NeoPetShop && dotnet tool restore && dotnet restore && dotnet build /property:GenerateFullPaths=true /consoleloggerparameters:NoSummary",
+    "buildelectron": "cd src-electron && tsc",
+    "buildweb": "GENERATE_SOURCEMAP=false react-scripts build",
+    "start": "npm run buildweb && concurrently npm:startreact npm:startelectron",
+    "startelectron": "npm run buildelectron && electron build/electron/index.js --dev",
+    "startreact": "PORT=3007 BROWSER=none react-scripts start"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "feed",
+    "args": [1]
+  }
+]

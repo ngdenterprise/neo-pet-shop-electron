@@ -1,0 +1,12 @@
+[
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "adoptPet",
+    "args": [1]
+  },
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "getPetOwner",
+    "args": [1]
+  }
+]

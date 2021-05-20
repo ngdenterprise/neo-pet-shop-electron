@@ -1,0 +1,17 @@
+[
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "getPetOwner",
+    "args": [1]
+  },
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "getLastFeedingTime",
+    "args": [1]
+  },
+  {
+    "contract": "djnicholson.NeoPetShopContract",
+    "operation": "isHungry",
+    "args": [1]
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm run start",
+      "type": "shell",
+      "command": "npm i && npm run start",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "options": {
+        "cwd": "${workspaceFolder}/NeoPetShop"
+      },
+      "label": "NeoPetShop: restore",
+      "command": "dotnet",
+      "type": "shell",
+      "args": ["restore"],
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "options": {
+        "cwd": "${workspaceFolder}/NeoPetShop"
+      },
+      "label": "NeoPetShop: build",
+      "command": "dotnet",
+      "type": "shell",
+      "args": [
+        "build",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": "build",
+      "dependsOn": "NeoPetShop: restore"
+    }
+  ]
+}

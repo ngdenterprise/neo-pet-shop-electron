@@ -1,0 +1,32 @@
+[
+  {
+    "contract": "GasToken",
+    "operation": "transfer",
+    "args": ["@genesis", "@owner", 100000000000, "Setup"]
+  },
+  {
+    "contract": "GasToken",
+    "operation": "transfer",
+    "args": ["@genesis", "@alice", 100000000000, "Setup"]
+  },
+  {
+    "contract": "GasToken",
+    "operation": "transfer",
+    "args": ["@genesis", "@bob", 100000000000, "Setup"]
+  },
+  {
+    "contract": "NeoToken",
+    "operation": "transfer",
+    "args": ["@genesis", "@owner", 100, "Setup"]
+  },
+  {
+    "contract": "NeoToken",
+    "operation": "transfer",
+    "args": ["@genesis", "@alice", 100, "Setup"]
+  },
+  {
+    "contract": "NeoToken",
+    "operation": "transfer",
+    "args": ["@genesis", "@bob", 100, "Setup"]
+  }
+]
