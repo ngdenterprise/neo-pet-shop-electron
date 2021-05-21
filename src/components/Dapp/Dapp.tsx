@@ -15,9 +15,11 @@ export default function Dapp() {
   useEffect(() => {
     window.parent.postMessage({}, "file://");
     window.addEventListener("message", (e) => {
-      console.log("->", e);
-      // TODO
-      setContractState(null);
+      const message = e.data;
+      console.log("[client] <-", message);
+      if (message.contractState) {
+        setContractState(message.contractState);
+      }
     });
   }, []);
 
