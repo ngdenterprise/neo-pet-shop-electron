@@ -2,7 +2,8 @@
   "name": "neo-pet-shop-electron",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
+  "devDependencies": {
+    "@cityofzion/neon-core": "^5.0.0-next.10",
     "@types/bs58check": "^2.1.0",
     "@types/node": "^12.20.11",
     "@types/react": "^17.0.4",
@@ -13,15 +14,19 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "typescript": "^4.2.4"
+    "ts-loader": "^8.2.0",
+    "typescript": "^4.2.4",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.7.0"
   },
   "scripts": {
-    "build": "npm run buildweb && npm run buildelectron && npm run buildcontract",
+    "build": "npm run buildweb && npm run buildelectronprod && npm run buildcontract",
     "buildcontract": "cd NeoPetShop && dotnet tool restore && dotnet restore && dotnet build /property:GenerateFullPaths=true /consoleloggerparameters:NoSummary",
-    "buildelectron": "cd src-electron && tsc",
+    "buildelectronprod": "webpack --config src-server/webpack.config.js --mode production",
+    "buildelectrondev": "webpack --config src-server/webpack.config.js --mode development",
     "buildweb": "GENERATE_SOURCEMAP=false react-scripts build",
     "start": "npm run buildweb && concurrently npm:startreact npm:startelectron",
-    "startelectron": "npm run buildelectron && electron build/electron/index.js --dev",
+    "startelectron": "npm run buildelectrondev && electron build/electron.js --dev",
     "startreact": "PORT=3007 BROWSER=none react-scripts start"
   },
   "eslintConfig": {

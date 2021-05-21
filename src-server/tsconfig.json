@@ -8,7 +8,6 @@
     "moduleResolution": "node",
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "../build/electron",
     "skipLibCheck": true,
     "strict": true,
     "target": "es5"

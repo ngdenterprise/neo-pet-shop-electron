@@ -1,3 +1,7 @@
+import PetShopContract from "./PetShopContract";
+
+const contract = new PetShopContract("http://seed4t.neo.org:20332");
+
 const postMessageToFrame = (message: any) => {
   console.log("->", message);
   document.querySelector("iframe")?.contentWindow?.postMessage(message, "*");

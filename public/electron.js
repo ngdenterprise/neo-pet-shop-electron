@@ -10,15 +10,11 @@ const createWindow = () => {
     width: 1280,
     height: 1024,
     webPreferences: {
-      preload: path.join(__dirname, "./dapp.js"),
+      preload: path.join(__dirname, "server", "./server.js"),
     },
   });
   mainWindow.loadFile(
-    path.join(
-      __dirname,
-      "..",
-      mode === "dev" ? "electron.dev.html" : "electron.html"
-    )
+    path.join(__dirname, mode === "dev" ? "electron.dev.html" : "electron.html")
   );
 };
 
