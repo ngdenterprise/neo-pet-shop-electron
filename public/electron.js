@@ -4,9 +4,11 @@ const path = require("path");
 const mode = (process.argv[2] || "").trim().replace(/^--/, "");
 console.log("Running in mode: ", mode);
 
+let mainWindow = null;
+
 const createWindow = () => {
   // Create the browser window and load the HTML of the outer frame:
-  const mainWindow = new electron.BrowserWindow({
+  mainWindow = new electron.BrowserWindow({
     width: 1280,
     height: 1024,
     webPreferences: {
@@ -42,4 +44,8 @@ electron.app.on("activate", function () {
   if (electron.BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+electron.ipcMain.on("get-save-path", (event) => {
+  event.returnValue = electron.dialog.showSaveDialogSync(mainWindow);
 });

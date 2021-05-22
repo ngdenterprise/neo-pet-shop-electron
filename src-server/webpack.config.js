@@ -27,6 +27,7 @@ const config = {
   resolve: {
     extensions: [".ts", ".js"],
   },
+  target: "electron-preload",
   module: {
     rules: [
       {
