@@ -1,3 +1,6 @@
+import * as neonCore from "@cityofzion/neon-core";
+
+import BlockchainMonitor from "./BlockchainMonitor";
 import PetShopContract from "./PetShopContract";
 
 const postMessageToFrame = (message: any) => {
@@ -12,7 +15,11 @@ window.addEventListener("load", () => {
   });
 });
 
-const contract = new PetShopContract(
-  "http://seed4t.neo.org:20332",
-  (contractState) => postMessageToFrame({ contractState })
-);
+const rpcClient = new neonCore.rpc.RPCClient("http://seed4t.neo.org:20332");
+
+const contract = new PetShopContract(rpcClient);
+
+new BlockchainMonitor(rpcClient, async () => {
+  const contractState = await contract.getContractState();
+  postMessageToFrame({ contractState });
+});

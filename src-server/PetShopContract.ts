@@ -10,34 +10,11 @@ const reverseHexString = (hexString: string) =>
 
 const CONTRACT_HASH =
   "0x" + reverseHexString("bac8fe4db61f69bde42c85a880ebb31f1fcfd1ba");
-const REFRESH_INTERVAL = 5000;
 
 export default class PetShopContract {
-  private readonly rpcClient: neonCore.rpc.RPCClient;
+  constructor(private readonly rpcClient: neonCore.rpc.RPCClient) {}
 
-  private lastKnownBlockHeight = 0;
-
-  constructor(
-    rpcUrl: string,
-    private readonly onUpdateContractState: (state: ContractState) => void
-  ) {
-    this.rpcClient = new neonCore.rpc.RPCClient(rpcUrl);
-    this.refreshLoop();
-  }
-
-  private async refreshLoop() {
-    try {
-      const blockHeight = await this.rpcClient.getBlockCount();
-      if (blockHeight > this.lastKnownBlockHeight) {
-        this.lastKnownBlockHeight = blockHeight;
-        await this.onUpdateContractState(await this.getContractState());
-      }
-    } finally {
-      setTimeout(() => this.refreshLoop(), REFRESH_INTERVAL);
-    }
-  }
-
-  private async getContractState(): Promise<ContractState> {
+  async getContractState(): Promise<ContractState> {
     const updatedContractState: ContractState = { pets: [] };
     const result = await this.rpcClient.invokeFunction(
       CONTRACT_HASH,
