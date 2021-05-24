@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
+import NewWalletForm from "./NewWalletForm";
 import WalletState from "../../../src-shared/WalletState";
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
  * Renders information about the currently opened wallet
  */
 export default function Wallet({ walletState, newWallet, openWallet }: Props) {
+  const [showNewWalletForm, setShowNewWalletForm] = useState(false);
   return (
     <div
       style={{
@@ -24,15 +26,14 @@ export default function Wallet({ walletState, newWallet, openWallet }: Props) {
       }}
     >
       {JSON.stringify(walletState)}
-      <button
-        onClick={() => {
-          // TODO: Get inputs from UI
-          newWallet("My wallet", "password");
-        }}
-      >
-        New
-      </button>
+      <button onClick={() => setShowNewWalletForm(true)}>New</button>
       <button onClick={openWallet}>Open</button>
+      {showNewWalletForm && (
+        <NewWalletForm
+          newWallet={newWallet}
+          onClose={() => setShowNewWalletForm(false)}
+        />
+      )}
     </div>
   );
 }
