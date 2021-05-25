@@ -5,6 +5,7 @@ import Pet from "./Pet";
 
 type Props = {
   contractState: ContractState;
+  disabled?: boolean;
   adopt: (petId: number) => Promise<void>;
   feed: (petId: number) => Promise<void>;
 };
@@ -12,7 +13,12 @@ type Props = {
 /**
  * Renders the main Pet Shop UI
  */
-export default function PetShop({ contractState, adopt, feed }: Props) {
+export default function PetShop({
+  contractState,
+  disabled,
+  adopt,
+  feed,
+}: Props) {
   if (!contractState.pets.length) {
     return <div>Loading&hellip;</div>;
   }
@@ -28,11 +34,12 @@ export default function PetShop({ contractState, adopt, feed }: Props) {
     >
       {contractState.pets.map((_) => (
         <Pet
-          key={_.petId}
+          disabled={disabled}
           isHungry={_.isHungry}
+          key={_.petId}
           lastFed={_.lastFed}
-          petId={_.petId}
           owner={_.owner}
+          petId={_.petId}
           adoptMe={!_.owner ? () => adopt(_.petId) : undefined}
           feedMe={() => feed(_.petId)}
         />

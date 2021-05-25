@@ -1,10 +1,11 @@
 import React from "react";
 
 type Props = {
-  petId: number;
+  disabled?: boolean;
   isHungry: boolean;
-  owner?: string;
   lastFed: Date;
+  owner?: string;
+  petId: number;
   adoptMe?: () => Promise<void>;
   feedMe?: () => Promise<void>;
 };
@@ -13,10 +14,11 @@ type Props = {
  * Renders an individual pet
  */
 export default function Pet({
-  petId,
+  disabled,
   isHungry,
-  owner,
   lastFed,
+  owner,
+  petId,
   adoptMe,
   feedMe,
 }: Props) {
@@ -34,12 +36,16 @@ export default function Pet({
       {!!owner && <div>Owner: {owner}</div>}
       {!!adoptMe && (
         <div>
-          <button onClick={adoptMe}>Adopt me!</button>
+          <button disabled={disabled} onClick={adoptMe}>
+            Adopt me!
+          </button>
         </div>
       )}
       {!!feedMe && (
         <div>
-          <button onClick={feedMe}>Feed me!</button>
+          <button disabled={disabled} onClick={feedMe}>
+            Feed me!
+          </button>
         </div>
       )}
     </div>

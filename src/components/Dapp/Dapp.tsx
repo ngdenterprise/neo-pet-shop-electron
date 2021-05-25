@@ -68,7 +68,12 @@ export default function Dapp() {
   } else {
     return (
       <>
-        <PetShop contractState={contractState} adopt={adopt} feed={feed} />
+        <PetShop
+          contractState={contractState}
+          disabled={walletState?.lockState !== "unlocked"}
+          adopt={adopt}
+          feed={feed}
+        />
         <Wallet
           walletState={walletState}
           closeWallet={closeWallet}
