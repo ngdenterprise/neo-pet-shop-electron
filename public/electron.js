@@ -46,6 +46,21 @@ electron.app.on("activate", function () {
   }
 });
 
+electron.ipcMain.on("get-open-path", (event) => {
+  event.returnValue = electron.dialog.showOpenDialogSync(mainWindow, {
+    buttonLabel: "Open wallet",
+    filters: [{ extensions: ["neo-wallet.json"], name: "Neo wallet" }],
+    title: "Open wallet",
+  });
+});
+
 electron.ipcMain.on("get-save-path", (event) => {
-  event.returnValue = electron.dialog.showSaveDialogSync(mainWindow);
+  event.returnValue = electron.dialog.showSaveDialogSync(mainWindow, {
+    buttonLabel: "Save wallet",
+    defaultPath: "wallet.neo-wallet.json",
+    filters: [{ extensions: ["neo-wallet.json"], name: "Neo wallet" }],
+    message: "Choose a path to save your wallet to...",
+    nameFieldLabel: "Don't lose funds, remember to BACKUP this file:",
+    title: "Save wallet",
+  });
 });

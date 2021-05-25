@@ -3,13 +3,17 @@ import * as neonCore from "@cityofzion/neon-core";
 
 import WalletState from "../src-shared/WalletState";
 
+type State = {
+  wallet: neonCore.wallet.Wallet;
+  selectedAccount: number;
+  lockState: "locked" | "unlocked" | "error";
+};
+
 export default class Wallet {
-  private wallet: neonCore.wallet.Wallet | null = null;
-  private selectedAccount: number = 0;
+  private state: State | null = null;
 
   close() {
-    this.wallet = null;
-    this.selectedAccount = 0;
+    this.state = null;
   }
 
   async createNew(walletName: string, password: string, path: string) {
@@ -23,22 +27,62 @@ export default class Wallet {
     await wallet.encryptAll(password);
     const walletJson = JSON.stringify(wallet.export());
     await fs.promises.writeFile(path, walletJson);
-    this.wallet = wallet;
-    this.selectedAccount = 0;
+    await wallet.decryptAll(password);
+    this.state = { wallet, selectedAccount: 0, lockState: "unlocked" };
   }
 
   getWalletState(): WalletState | null {
-    if (!this.wallet) {
+    if (!this.state) {
       return null;
     }
-    const result: WalletState = {
-      accounts: this.wallet.accounts.map((_) => _.label),
-      name: this.wallet.name,
-      selectedAccount: this.selectedAccount,
+    return {
+      accounts: this.state.wallet.accounts.map((_) => _.label),
+      name: this.state.wallet.name,
+      selectedAccount: Math.max(
+        0,
+        Math.min(
+          this.state.wallet.accounts.length - 1,
+          this.state.selectedAccount
+        )
+      ),
+      lockState: this.state.lockState,
     };
-    if (result.selectedAccount >= result.accounts.length) {
-      result.selectedAccount = 0;
+  }
+
+  async open(path: string) {
+    const walletJson = JSON.parse(
+      (await fs.promises.readFile(path)).toString()
+    );
+    if (
+      walletJson.name === undefined ||
+      walletJson.version === undefined ||
+      walletJson.scrypt === undefined ||
+      walletJson.accounts === undefined
+    ) {
+      // Probably not a wallet
+      return;
     }
-    return result;
+    const wallet = new neonCore.wallet.Wallet(walletJson);
+    this.state = { wallet, selectedAccount: 0, lockState: "locked" };
+    // Attempt to unlock with an empty password:
+    await this.unlock("");
+    if (this.state.lockState === "error") {
+      this.state.lockState = "locked";
+    }
+  }
+
+  async unlock(password: string) {
+    if (!this.state) {
+      return;
+    }
+    for (const account of this.state.wallet.accounts) {
+      try {
+        await account.decrypt(password);
+      } catch (e) {
+        this.state.lockState = "error";
+        return;
+      }
+    }
+    this.state.lockState = "unlocked";
   }
 }

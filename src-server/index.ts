@@ -12,6 +12,10 @@ const postMessageToFrame = (message: any) => {
 
 const wallet = new Wallet();
 
+const getOpenPath = () => {
+  return electron.ipcRenderer.sendSync("get-open-path") as string[] | undefined;
+};
+
 const getSavePath = () => {
   return electron.ipcRenderer.sendSync("get-save-path") as string | undefined;
 };
@@ -20,24 +24,38 @@ window.addEventListener("load", () => {
   window.addEventListener("message", async (e) => {
     const message = e.data;
     console.log("[server] <-", message);
+
     if (message.closeWallet) {
       wallet.close();
       postMessageToFrame({ walletState: wallet.getWalletState() });
     }
+
     if (
       message.newWallet &&
       message.newWallet.name &&
       message.newWallet.password
     ) {
       const path = getSavePath();
-      if (!path) {
-        return;
+      if (path) {
+        await wallet.createNew(
+          message.newWallet.name,
+          message.newWallet.password,
+          path
+        );
+        postMessageToFrame({ walletState: wallet.getWalletState() });
       }
-      await wallet.createNew(
-        message.newWallet.name,
-        message.newWallet.password,
-        path
-      );
+    }
+
+    if (message.openWallet) {
+      const path = getOpenPath();
+      if (path && path[0]) {
+        await wallet.open(path[0]);
+        postMessageToFrame({ walletState: wallet.getWalletState() });
+      }
+    }
+
+    if (message.unlockWallet && message.unlockWallet.password !== undefined) {
+      await wallet.unlock(message.unlockWallet.password);
       postMessageToFrame({ walletState: wallet.getWalletState() });
     }
   });

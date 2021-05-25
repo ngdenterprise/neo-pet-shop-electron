@@ -48,7 +48,11 @@ export default function Dapp() {
   };
 
   const openWallet = async () => {
-    // TODO
+    window.parent.postMessage({ openWallet: true }, TARGET_ORIGIN);
+  };
+
+  const unlockWallet = async (password: string) => {
+    window.parent.postMessage({ unlockWallet: { password } }, TARGET_ORIGIN);
   };
 
   if (!contractState) {
@@ -62,6 +66,7 @@ export default function Dapp() {
           closeWallet={closeWallet}
           newWallet={newWallet}
           openWallet={openWallet}
+          unlockWallet={unlockWallet}
         />
       </>
     );
