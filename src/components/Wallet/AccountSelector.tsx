@@ -21,11 +21,12 @@ export default function AccountSelector({
   const [showNewAccountForm, setShowNewAccountForm] = useState(false);
   return (
     <>
-      <select onChange={(e) => selectAccount(e.target.selectedIndex)}>
+      <select
+        defaultValue={selectedAccount}
+        onChange={(e) => selectAccount(e.target.selectedIndex)}
+      >
         {accounts.map((name, i) => (
-          <option key={i} selected={i === selectedAccount}>
-            {name}
-          </option>
+          <option key={i}>{name}</option>
         ))}
       </select>
       <button
