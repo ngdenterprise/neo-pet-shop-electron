@@ -7,6 +7,11 @@ export default class Wallet {
   private wallet: neonCore.wallet.Wallet | null = null;
   private selectedAccount: number = 0;
 
+  close() {
+    this.wallet = null;
+    this.selectedAccount = 0;
+  }
+
   async createNew(walletName: string, password: string, path: string) {
     const account = new neonCore.wallet.Account(
       neonCore.wallet.generatePrivateKey()

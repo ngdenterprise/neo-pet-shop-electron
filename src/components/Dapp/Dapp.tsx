@@ -22,10 +22,10 @@ export default function Dapp() {
     window.addEventListener("message", (e) => {
       const message = e.data;
       console.log("[client] <-", message);
-      if (message.contractState) {
+      if (message.contractState !== undefined) {
         setContractState(message.contractState);
       }
-      if (message.walletState) {
+      if (message.walletState !== undefined) {
         setWalletState(message.walletState);
       }
     });
@@ -33,6 +33,10 @@ export default function Dapp() {
 
   const adopt = async (petId: number) => {
     // TODO
+  };
+
+  const closeWallet = async () => {
+    window.parent.postMessage({ closeWallet: true }, TARGET_ORIGIN);
   };
 
   const feed = async (petId: number) => {
@@ -55,6 +59,7 @@ export default function Dapp() {
         <PetShop contractState={contractState} adopt={adopt} feed={feed} />
         <Wallet
           walletState={walletState}
+          closeWallet={closeWallet}
           newWallet={newWallet}
           openWallet={openWallet}
         />

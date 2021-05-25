@@ -20,6 +20,10 @@ window.addEventListener("load", () => {
   window.addEventListener("message", async (e) => {
     const message = e.data;
     console.log("[server] <-", message);
+    if (message.closeWallet) {
+      wallet.close();
+      postMessageToFrame({ walletState: wallet.getWalletState() });
+    }
     if (
       message.newWallet &&
       message.newWallet.name &&
@@ -34,8 +38,7 @@ window.addEventListener("load", () => {
         message.newWallet.password,
         path
       );
-      const walletState = wallet.getWalletState();
-      postMessageToFrame({ walletState });
+      postMessageToFrame({ walletState: wallet.getWalletState() });
     }
   });
 });

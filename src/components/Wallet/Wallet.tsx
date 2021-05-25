@@ -5,6 +5,7 @@ import WalletState from "../../../src-shared/WalletState";
 
 type Props = {
   walletState: WalletState | null;
+  closeWallet: () => Promise<void>;
   newWallet: (name: string, password: string) => Promise<void>;
   openWallet: () => Promise<void>;
 };
@@ -12,7 +13,12 @@ type Props = {
 /**
  * Renders information about the currently opened wallet
  */
-export default function Wallet({ walletState, newWallet, openWallet }: Props) {
+export default function Wallet({
+  walletState,
+  closeWallet,
+  newWallet,
+  openWallet,
+}: Props) {
   const [showNewWalletForm, setShowNewWalletForm] = useState(false);
   return (
     <div
@@ -26,8 +32,17 @@ export default function Wallet({ walletState, newWallet, openWallet }: Props) {
       }}
     >
       {JSON.stringify(walletState)}
-      <button onClick={() => setShowNewWalletForm(true)}>New</button>
-      <button onClick={openWallet}>Open</button>
+      {!walletState && (
+        <>
+          <button onClick={() => setShowNewWalletForm(true)}>New</button>
+          <button onClick={openWallet}>Open</button>
+        </>
+      )}
+      {!!walletState && (
+        <>
+          <button onClick={closeWallet}>Close</button>
+        </>
+      )}
       {showNewWalletForm && (
         <NewWalletForm
           newWallet={newWallet}
