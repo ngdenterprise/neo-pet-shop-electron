@@ -34,7 +34,7 @@ export default function PetShop({ contractState, adopt, feed }: Props) {
           petId={_.petId}
           owner={_.owner}
           adoptMe={!_.owner ? () => adopt(_.petId) : undefined}
-          feedMe={!!_.owner ? () => feed(_.petId) : undefined}
+          feedMe={() => feed(_.petId)}
         />
       ))}
     </div>
