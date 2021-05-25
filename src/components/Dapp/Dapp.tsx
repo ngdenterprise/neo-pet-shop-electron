@@ -43,12 +43,20 @@ export default function Dapp() {
     // TODO
   };
 
+  const newAccount = async (name: string) => {
+    window.parent.postMessage({ newAccount: { name } }, TARGET_ORIGIN);
+  };
+
   const newWallet = async (name: string, password: string) => {
     window.parent.postMessage({ newWallet: { name, password } }, TARGET_ORIGIN);
   };
 
   const openWallet = async () => {
     window.parent.postMessage({ openWallet: true }, TARGET_ORIGIN);
+  };
+
+  const selectAccount = async (i: number) => {
+    window.parent.postMessage({ selectAccount: { i } }, TARGET_ORIGIN);
   };
 
   const unlockWallet = async (password: string) => {
@@ -64,8 +72,10 @@ export default function Dapp() {
         <Wallet
           walletState={walletState}
           closeWallet={closeWallet}
+          newAccount={newAccount}
           newWallet={newWallet}
           openWallet={openWallet}
+          selectAccount={selectAccount}
           unlockWallet={unlockWallet}
         />
       </>

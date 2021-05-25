@@ -2,6 +2,9 @@ import * as neonCore from "@cityofzion/neon-core";
 
 import ContractState from "../src-shared/ContractState";
 
+const TESTNET_CONTRACT_HASH = "bac8fe4db61f69bde42c85a880ebb31f1fcfd1ba";
+const PRIVATENET_CONTRACT_HASH = "9c6cc77576574a6227612e920533a61af798f265";
+
 const reverseHexString = (hexString: string) =>
   hexString
     .match(/[a-fA-F0-9]{2}/g)
@@ -9,7 +12,8 @@ const reverseHexString = (hexString: string) =>
     .join("");
 
 const CONTRACT_HASH =
-  "0x" + reverseHexString("bac8fe4db61f69bde42c85a880ebb31f1fcfd1ba");
+  //"0x" + reverseHexString(TESTNET_CONTRACT_HASH);
+  "0x" + reverseHexString(PRIVATENET_CONTRACT_HASH);
 
 export default class PetShopContract {
   constructor(private readonly rpcClient: neonCore.rpc.RPCClient) {}
@@ -20,7 +24,12 @@ export default class PetShopContract {
       CONTRACT_HASH,
       "getAllStateJson"
     );
-    const allStateJson = JSON.parse(atob(`${result.stack[0]?.value || ""}`));
+    let allStateJson = [];
+    try {
+      allStateJson = JSON.parse(atob(`${result.stack[0]?.value || ""}`));
+    } catch (e) {
+      console.warn("getAllStateJson parse error", e.message, result);
+    }
     if (!Array.isArray(allStateJson)) {
       throw new Error("getAllStateJson did not return an array");
     }

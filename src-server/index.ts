@@ -5,6 +5,9 @@ import BlockchainMonitor from "./BlockchainMonitor";
 import PetShopContract from "./PetShopContract";
 import Wallet from "./Wallet";
 
+const PRIVATENET = "http://127.0.0.1:50012";
+const TESTNET = "http://seed3t.neo.org:20332";
+
 const postMessageToFrame = (message: any) => {
   console.log("[server] ->", message);
   document.querySelector("iframe")?.contentWindow?.postMessage(message, "*");
@@ -27,6 +30,11 @@ window.addEventListener("load", () => {
 
     if (message.closeWallet) {
       wallet.close();
+      postMessageToFrame({ walletState: wallet.getWalletState() });
+    }
+
+    if (message.newAccount && message.newAccount.name) {
+      await wallet.newAccount(message.newAccount.name);
       postMessageToFrame({ walletState: wallet.getWalletState() });
     }
 
@@ -54,6 +62,11 @@ window.addEventListener("load", () => {
       }
     }
 
+    if (message.selectAccount && message.selectAccount.i !== undefined) {
+      wallet.selectAccount(message.selectAccount.i);
+      postMessageToFrame({ walletState: wallet.getWalletState() });
+    }
+
     if (message.unlockWallet && message.unlockWallet.password !== undefined) {
       await wallet.unlock(message.unlockWallet.password);
       postMessageToFrame({ walletState: wallet.getWalletState() });
@@ -61,7 +74,7 @@ window.addEventListener("load", () => {
   });
 });
 
-const rpcClient = new neonCore.rpc.RPCClient("http://seed4t.neo.org:20332");
+const rpcClient = new neonCore.rpc.RPCClient(PRIVATENET);
 
 const contract = new PetShopContract(rpcClient);
 

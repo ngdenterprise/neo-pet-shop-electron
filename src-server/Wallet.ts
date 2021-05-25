@@ -7,6 +7,8 @@ type State = {
   wallet: neonCore.wallet.Wallet;
   selectedAccount: number;
   lockState: "locked" | "unlocked" | "error";
+  password: string | null;
+  path: string;
 };
 
 export default class Wallet {
@@ -28,7 +30,13 @@ export default class Wallet {
     const walletJson = JSON.stringify(wallet.export());
     await fs.promises.writeFile(path, walletJson);
     await wallet.decryptAll(password);
-    this.state = { wallet, selectedAccount: 0, lockState: "unlocked" };
+    this.state = {
+      wallet,
+      selectedAccount: 0,
+      lockState: "unlocked",
+      password,
+      path,
+    };
   }
 
   getWalletState(): WalletState | null {
@@ -49,6 +57,22 @@ export default class Wallet {
     };
   }
 
+  async newAccount(name: string) {
+    if (!this.state || this.state.password === null) {
+      return null;
+    }
+    const account = new neonCore.wallet.Account(
+      neonCore.wallet.generatePrivateKey()
+    );
+    account.label = name;
+    this.state.wallet.addAccount(account);
+    this.state.selectedAccount = this.state.wallet.accounts.length - 1;
+    await this.state.wallet.encryptAll(this.state.password);
+    const walletJson = JSON.stringify(this.state.wallet.export());
+    await fs.promises.writeFile(this.state.path, walletJson);
+    await this.state.wallet.decryptAll(this.state.password);
+  }
+
   async open(path: string) {
     const walletJson = JSON.parse(
       (await fs.promises.readFile(path)).toString()
@@ -63,12 +87,28 @@ export default class Wallet {
       return;
     }
     const wallet = new neonCore.wallet.Wallet(walletJson);
-    this.state = { wallet, selectedAccount: 0, lockState: "locked" };
+    this.state = {
+      wallet,
+      selectedAccount: 0,
+      lockState: "locked",
+      password: null,
+      path,
+    };
     // Attempt to unlock with an empty password:
     await this.unlock("");
     if (this.state.lockState === "error") {
       this.state.lockState = "locked";
     }
+  }
+
+  selectAccount(i: number) {
+    if (!this.state) {
+      return;
+    }
+    this.state.selectedAccount = Math.max(
+      0,
+      Math.min(this.state.wallet.accounts.length - 1, i)
+    );
   }
 
   async unlock(password: string) {
@@ -80,9 +120,11 @@ export default class Wallet {
         await account.decrypt(password);
       } catch (e) {
         this.state.lockState = "error";
+        this.state.password = null;
         return;
       }
     }
     this.state.lockState = "unlocked";
+    this.state.password = password;
   }
 }

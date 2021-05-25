@@ -4,37 +4,30 @@ import Dialog from "../Dialog";
 import LabeledInput from "../LabeledInput";
 
 type Props = {
-  newWallet: (name: string, password: string) => Promise<void>;
+  newAccount: (name: string) => Promise<void>;
   onClose: () => void;
 };
 
 /**
- * Prompts the user for the inputs required to create a new wallet.
+ * Prompts the user for a new account name
  */
-export default function NewWalletForm({ newWallet, onClose }: Props) {
+export default function AccountNameForm({ newAccount, onClose }: Props) {
   const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
   return (
     <Dialog>
       <LabeledInput
-        label="Enter a name for your new wallet"
+        label="Enter a name for the new account"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <LabeledInput
-        label="Choose a password for your wallet"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
       <div>
         <button
-          disabled={!name || !password}
           onClick={async () => {
-            await newWallet(name, password);
+            await newAccount(name);
             onClose();
           }}
         >
-          Save wallet
+          Create account
         </button>
       </div>
       <div>

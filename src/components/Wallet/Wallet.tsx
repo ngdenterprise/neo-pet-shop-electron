@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import AccountSelector from "./AccountSelector";
 import NewWalletForm from "./NewWalletForm";
 import WalletPasswordForm from "./WalletPasswordForm";
 import WalletState from "../../../src-shared/WalletState";
@@ -7,8 +8,10 @@ import WalletState from "../../../src-shared/WalletState";
 type Props = {
   walletState: WalletState | null;
   closeWallet: () => Promise<void>;
+  newAccount: (name: string) => Promise<void>;
   newWallet: (name: string, password: string) => Promise<void>;
   openWallet: () => Promise<void>;
+  selectAccount: (i: number) => Promise<void>;
   unlockWallet: (password: string) => Promise<void>;
 };
 
@@ -18,8 +21,10 @@ type Props = {
 export default function Wallet({
   walletState,
   closeWallet,
+  newAccount,
   newWallet,
   openWallet,
+  selectAccount,
   unlockWallet,
 }: Props) {
   const [showNewWalletForm, setShowNewWalletForm] = useState(false);
@@ -35,9 +40,23 @@ export default function Wallet({
         right: 0,
       }}
     >
-      {JSON.stringify(walletState)}
+      {!!walletState && (
+        <>
+          <strong>Wallet:</strong> {walletState.name} <strong>Account:</strong>{" "}
+          <AccountSelector
+            accounts={walletState.accounts}
+            selectedAccount={walletState.selectedAccount}
+            newAccount={
+              walletState.lockState === "unlocked" ? newAccount : undefined
+            }
+            selectAccount={selectAccount}
+          />
+        </>
+      )}
       {!walletState && (
         <>
+          You need to open or create a wallet before you can adopt and feed
+          pets.
           <button onClick={() => setShowNewWalletForm(true)}>New</button>
           <button onClick={openWallet}>Open</button>
         </>
