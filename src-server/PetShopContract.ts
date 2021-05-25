@@ -15,6 +15,17 @@ const CONTRACT_HASH =
   //"0x" + reverseHexString(TESTNET_CONTRACT_HASH);
   "0x" + reverseHexString(PRIVATENET_CONTRACT_HASH);
 
+const decodeAddress = (base64EncodedAddress?: string) => {
+  if (!base64EncodedAddress) {
+    return undefined;
+  }
+  const scriptHash = neonCore.u.str2hexstring(atob(base64EncodedAddress));
+  if (scriptHash === "0000000000000000000000000000000000000000") {
+    return undefined;
+  }
+  return neonCore.wallet.getAddressFromScriptHash(scriptHash);
+};
+
 export default class PetShopContract {
   constructor(private readonly rpcClient: neonCore.rpc.RPCClient) {}
 
@@ -40,7 +51,7 @@ export default class PetShopContract {
     for (let petId = 0; petId < pets.length; petId++) {
       const pet = pets[petId];
       const isHungry = !!pet[2];
-      const owner = pet[0] || undefined;
+      const owner = decodeAddress(pet[0]);
       const lastFed = new Date((pet[1] || 0) * 1000);
       updatedContractState.pets[petId] = { petId, isHungry, owner, lastFed };
     }
