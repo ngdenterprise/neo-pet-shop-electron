@@ -39,6 +39,10 @@ export default class Wallet {
     };
   }
 
+  getAccount() {
+    return this.state?.wallet.accounts[this.state.selectedAccount] || undefined;
+  }
+
   getWalletState(): WalletState | null {
     if (!this.state) {
       return null;

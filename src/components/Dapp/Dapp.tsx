@@ -32,7 +32,7 @@ export default function Dapp() {
   }, []);
 
   const adopt = async (petId: number) => {
-    // TODO
+    window.parent.postMessage({ adopt: { petId } }, TARGET_ORIGIN);
   };
 
   const closeWallet = async () => {
