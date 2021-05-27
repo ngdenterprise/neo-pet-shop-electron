@@ -2,20 +2,32 @@ import * as electron from "electron";
 import * as neonCore from "@cityofzion/neon-core";
 
 import BlockchainMonitor from "./BlockchainMonitor";
+import BlockchainParameters from "./BlockchainParameters";
 import PetShopContract from "./PetShopContract";
 import Wallet from "./Wallet";
-
-const PRIVATENET = "http://127.0.0.1:50012";
-const TESTNET = "http://seed3t.neo.org:20332";
-
-const TESTNET_CONTRACT_HASH = "bac8fe4db61f69bde42c85a880ebb31f1fcfd1ba";
-const PRIVATENET_CONTRACT_HASH = "9c6cc77576574a6227612e920533a61af798f265";
 
 const reverseHexString = (hexString: string) =>
   hexString
     .match(/[a-fA-F0-9]{2}/g)
     ?.reverse()
     .join("");
+
+const TESTNET: BlockchainParameters = {
+  rpcUrl: "http://seed3t.neo.org:20332",
+  contractHash:
+    "0x" + reverseHexString("bac8fe4db61f69bde42c85a880ebb31f1fcfd1ba"),
+  magic: neonCore.CONST.MAGIC_NUMBER.TestNet,
+};
+
+const PRIVATENET: BlockchainParameters = {
+  rpcUrl: "http://127.0.0.1:50012",
+  contractHash:
+    "0x" + reverseHexString("9c6cc77576574a6227612e920533a61af798f265"),
+  magic: neonCore.CONST.MAGIC_NUMBER.SoloNet,
+};
+
+// const blockchainParameters = TESTNET;
+const blockchainParameters = PRIVATENET;
 
 const postMessageToFrame = (message: any) => {
   console.log("[server] ->", message);
@@ -32,12 +44,12 @@ const getSavePath = () => {
   return electron.ipcRenderer.sendSync("get-save-path") as string | undefined;
 };
 
-const rpcClient = new neonCore.rpc.RPCClient(PRIVATENET);
+const rpcClient = new neonCore.rpc.RPCClient(blockchainParameters.rpcUrl);
 
 const contract = new PetShopContract(
   rpcClient,
-  "0x" + reverseHexString(PRIVATENET_CONTRACT_HASH),
-  neonCore.CONST.MAGIC_NUMBER.TestNet
+  blockchainParameters.contractHash,
+  blockchainParameters.magic
 );
 
 window.addEventListener("load", () => {
