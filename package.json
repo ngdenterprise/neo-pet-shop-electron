@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@cityofzion/neon-core": "^5.0.0-next.10",
+    "@cityofzion/neon-core": "^5.0.0-next.11",
     "@types/bs58check": "^2.1.0",
     "@types/node": "^12.20.11",
     "@types/react": "^17.0.4",

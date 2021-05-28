@@ -26,8 +26,8 @@ const PRIVATENET: BlockchainParameters = {
   magic: neonCore.CONST.MAGIC_NUMBER.SoloNet,
 };
 
-// const blockchainParameters = TESTNET;
-const blockchainParameters = PRIVATENET;
+const blockchainParameters = TESTNET;
+// const blockchainParameters = PRIVATENET;
 
 const postMessageToFrame = (message: any) => {
   console.log("[server] ->", message);

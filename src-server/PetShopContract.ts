@@ -1,5 +1,4 @@
 import * as neonCore from "@cityofzion/neon-core";
-import * as neonExperimental from "./neonExperimental";
 
 import ContractState from "../src-shared/ContractState";
 
@@ -22,19 +21,6 @@ export default class PetShopContract {
   ) {}
 
   async adopt(petId: number, account: neonCore.wallet.Account) {
-    const contract = new neonExperimental.SmartContract(
-      neonCore.u.HexString.fromHex(this.contractHash),
-      {
-        networkMagic: this.networkMagic,
-        rpcAddress: this.rpcClient.url,
-        account,
-      }
-    );
-    await contract.invoke("adoptPet", [
-      neonCore.sc.ContractParam.integer(petId),
-    ]);
-
-    /*
     const script = neonCore.sc.createScript({
       scriptHash: this.contractHash,
       operation: "adoptPet",
@@ -42,9 +28,8 @@ export default class PetShopContract {
     });
     const currentHeight = await this.rpcClient.getBlockCount();
     const transaction = new neonCore.tx.Transaction({
-      version: 0,
-      nonce: Math.floor(Math.random() * 2 ** 32),
-      validUntilBlock: currentHeight + 10000,
+      validUntilBlock:
+        currentHeight + neonCore.tx.Transaction.MAX_TRANSACTION_LIFESPAN - 1,
       systemFee: 0,
       script,
     });
@@ -60,7 +45,6 @@ export default class PetShopContract {
     );
     console.log("signed tx", signedTransaction);
     await this.rpcClient.sendRawTransaction(signedTransaction);
-    */
   }
 
   async getContractState(): Promise<ContractState> {
@@ -86,7 +70,7 @@ export default class PetShopContract {
       const pet = pets[petId];
       const isHungry = !!pet[2];
       const owner = decodeAddress(pet[0]);
-      const lastFed = new Date((pet[1] || 0) * 1000);
+      const lastFed = new Date(pet[1] || 0);
       updatedContractState.pets[petId] = { petId, isHungry, owner, lastFed };
     }
     return updatedContractState;
