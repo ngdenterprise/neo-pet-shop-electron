@@ -119,16 +119,18 @@ export default class Wallet {
     if (!this.state) {
       return;
     }
-    for (const account of this.state.wallet.accounts) {
-      try {
-        await account.decrypt(password);
-      } catch (e) {
+    try {
+      const results = await this.state.wallet.decryptAll(password);
+      if (results.indexOf(false) !== -1) {
         this.state.lockState = "error";
         this.state.password = null;
-        return;
+      } else {
+        this.state.lockState = "unlocked";
+        this.state.password = password;
       }
+    } catch (e) {
+      this.state.lockState = "error";
+      this.state.password = null;
     }
-    this.state.lockState = "unlocked";
-    this.state.password = password;
   }
 }

@@ -1,4 +1,5 @@
 import * as neonCore from "@cityofzion/neon-core";
+import * as neonExperimental from "./neonExperimental";
 
 import ContractState from "../src-shared/ContractState";
 
@@ -21,6 +22,19 @@ export default class PetShopContract {
   ) {}
 
   async adopt(petId: number, account: neonCore.wallet.Account) {
+    const contract = new neonExperimental.SmartContract(
+      neonCore.u.HexString.fromHex(this.contractHash),
+      {
+        networkMagic: this.networkMagic,
+        rpcAddress: this.rpcClient.url,
+        account,
+      }
+    );
+    await contract.invoke("adoptPet", [
+      neonCore.sc.ContractParam.integer(petId),
+    ]);
+
+    /*
     const script = neonCore.sc.createScript({
       scriptHash: this.contractHash,
       operation: "adoptPet",
@@ -28,23 +42,25 @@ export default class PetShopContract {
     });
     const currentHeight = await this.rpcClient.getBlockCount();
     const transaction = new neonCore.tx.Transaction({
-      signers: [
-        {
-          account: account.scriptHash,
-          scopes: neonCore.tx.WitnessScope.CalledByEntry,
-        },
-      ],
-      validUntilBlock: currentHeight + 1000,
+      version: 0,
+      nonce: Math.floor(Math.random() * 2 ** 32),
+      validUntilBlock: currentHeight + 10000,
       systemFee: 0,
       script,
     });
+    transaction.addSigner({
+      account: account.scriptHash,
+      scopes: "CalledByEntry",
+    });
     await this.setNetworkFee(transaction);
     await this.setSystemFee(transaction);
-    console.log("unsigned tx", transaction);
-    const signedTransaction = transaction.sign(account, this.networkMagic);
-    console.log("signed tx", transaction);
-    console.log("serialized tx", signedTransaction.serialize(true));
-    await this.rpcClient.sendRawTransaction(signedTransaction.serialize(true));
+    const signedTransaction = transaction.sign(
+      account.privateKey,
+      this.networkMagic
+    );
+    console.log("signed tx", signedTransaction);
+    await this.rpcClient.sendRawTransaction(signedTransaction);
+    */
   }
 
   async getContractState(): Promise<ContractState> {
