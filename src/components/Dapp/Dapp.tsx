@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import ContractState from "../../../src-shared/ContractState";
+import ErrorDisplay from "../ErrorDisplay";
 import LoadingIndicator from "../LoadingIndicator";
 import PetShop from "../PetShop/PetShop";
 import SplashScreen from "./SplashScreen";
@@ -16,6 +17,7 @@ const TARGET_ORIGIN = "file://";
 export default function Dapp() {
   const [contractState, setContractState] =
     useState<ContractState | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [pendingTxs, setPendingTxs] = useState<string[]>([]);
   const [walletState, setWalletState] = useState<WalletState | null>(null);
 
@@ -26,6 +28,9 @@ export default function Dapp() {
       console.log("[client] <-", message);
       if (message.contractState !== undefined) {
         setContractState(message.contractState);
+      }
+      if (message.error !== undefined) {
+        setError(message.error);
       }
       if (message.pendingTxs !== undefined) {
         setPendingTxs(message.pendingTxs);
@@ -89,6 +94,7 @@ export default function Dapp() {
           unlockWallet={unlockWallet}
         />
         <LoadingIndicator pendingTxs={pendingTxs} />
+        <ErrorDisplay error={error} dismiss={() => setError(null)} />
       </>
     );
   }

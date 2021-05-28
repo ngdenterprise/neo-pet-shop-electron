@@ -75,60 +75,64 @@ window.addEventListener("load", () => {
     const message = e.data;
     console.log("[server] <-", message);
 
-    if (message.adopt?.petId !== undefined) {
-      const account = wallet.getAccount();
-      if (account) {
-        pendingTxs.push(await contract.adopt(message.adopt?.petId, account));
-        postMessageToFrame({ pendingTxs });
+    try {
+      if (message.adopt?.petId !== undefined) {
+        const account = wallet.getAccount();
+        if (account) {
+          pendingTxs.push(await contract.adopt(message.adopt?.petId, account));
+          postMessageToFrame({ pendingTxs });
+        }
       }
-    }
 
-    if (message.closeWallet) {
-      wallet.close();
-      postMessageToFrame({ walletState: wallet.getWalletState() });
-    }
-
-    if (message.feed?.petId !== undefined) {
-      const account = wallet.getAccount();
-      if (account) {
-        pendingTxs.push(await contract.feed(message.feed?.petId, account));
-        postMessageToFrame({ pendingTxs });
-      }
-    }
-
-    if (message.newAccount?.name) {
-      await wallet.newAccount(message.newAccount.name);
-      postMessageToFrame({ walletState: wallet.getWalletState() });
-    }
-
-    if (message.newWallet?.name && message.newWallet?.password) {
-      const path = getSavePath();
-      if (path) {
-        await wallet.createNew(
-          message.newWallet.name,
-          message.newWallet.password,
-          path
-        );
+      if (message.closeWallet) {
+        wallet.close();
         postMessageToFrame({ walletState: wallet.getWalletState() });
       }
-    }
 
-    if (message.openWallet) {
-      const path = getOpenPath();
-      if (path && path[0]) {
-        await wallet.open(path[0]);
+      if (message.feed?.petId !== undefined) {
+        const account = wallet.getAccount();
+        if (account) {
+          pendingTxs.push(await contract.feed(message.feed?.petId, account));
+          postMessageToFrame({ pendingTxs });
+        }
+      }
+
+      if (message.newAccount?.name) {
+        await wallet.newAccount(message.newAccount.name);
         postMessageToFrame({ walletState: wallet.getWalletState() });
       }
-    }
 
-    if (message.selectAccount?.i !== undefined) {
-      wallet.selectAccount(message.selectAccount.i);
-      postMessageToFrame({ walletState: wallet.getWalletState() });
-    }
+      if (message.newWallet?.name && message.newWallet?.password) {
+        const path = getSavePath();
+        if (path) {
+          await wallet.createNew(
+            message.newWallet.name,
+            message.newWallet.password,
+            path
+          );
+          postMessageToFrame({ walletState: wallet.getWalletState() });
+        }
+      }
 
-    if (message.unlockWallet?.password !== undefined) {
-      await wallet.unlock(message.unlockWallet.password);
-      postMessageToFrame({ walletState: wallet.getWalletState() });
+      if (message.openWallet) {
+        const path = getOpenPath();
+        if (path && path[0]) {
+          await wallet.open(path[0]);
+          postMessageToFrame({ walletState: wallet.getWalletState() });
+        }
+      }
+
+      if (message.selectAccount?.i !== undefined) {
+        wallet.selectAccount(message.selectAccount.i);
+        postMessageToFrame({ walletState: wallet.getWalletState() });
+      }
+
+      if (message.unlockWallet?.password !== undefined) {
+        await wallet.unlock(message.unlockWallet.password);
+        postMessageToFrame({ walletState: wallet.getWalletState() });
+      }
+    } catch (e) {
+      postMessageToFrame({ error: e.message || `${e}` });
     }
   });
 });
