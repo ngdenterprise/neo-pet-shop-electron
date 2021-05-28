@@ -5,13 +5,13 @@ import LabeledInput from "../LabeledInput";
 
 type Props = {
   unlockWallet: (password: string) => Promise<void>;
-  onClose: () => void;
+  onCancel: () => void;
 };
 
 /**
  * Prompts the user for their wallet password
  */
-export default function WalletPasswordForm({ unlockWallet, onClose }: Props) {
+export default function WalletPasswordForm({ unlockWallet, onCancel }: Props) {
   const [password, setPassword] = useState("");
   return (
     <Dialog>
@@ -21,17 +21,10 @@ export default function WalletPasswordForm({ unlockWallet, onClose }: Props) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
-        <button
-          onClick={async () => {
-            await unlockWallet(password);
-            onClose();
-          }}
-        >
-          Unlock wallet
-        </button>
+        <button onClick={() => unlockWallet(password)}>Unlock wallet</button>
       </div>
       <div>
-        <button onClick={onClose}>Cancel</button>
+        <button onClick={onCancel}>Cancel</button>
       </div>
     </Dialog>
   );

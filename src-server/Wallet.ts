@@ -3,10 +3,12 @@ import * as neonCore from "@cityofzion/neon-core";
 
 import WalletState from "../src-shared/WalletState";
 
+type LockState = "locked" | "unlocked" | "error";
+
 type State = {
   wallet: neonCore.wallet.Wallet;
   selectedAccount: number;
-  lockState: "locked" | "unlocked" | "error";
+  lockState: LockState;
   password: string | null;
   path: string;
 };

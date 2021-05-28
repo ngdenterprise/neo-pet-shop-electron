@@ -132,6 +132,7 @@ window.addEventListener("load", () => {
         postMessageToFrame({ walletState: wallet.getWalletState() });
       }
     } catch (e) {
+      console.error("Sending error to UI", e);
       postMessageToFrame({ error: e.message || `${e}` });
     }
   });

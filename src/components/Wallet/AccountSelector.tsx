@@ -5,7 +5,7 @@ import AccountNameForm from "./AccountNameForm";
 type Props = {
   accounts: string[];
   selectedAccount: number;
-  newAccount?: (name: string) => Promise<void>;
+  newAccount: (name: string) => Promise<void>;
   selectAccount: (i: number) => Promise<void>;
 };
 
@@ -29,13 +29,8 @@ export default function AccountSelector({
           <option key={i}>{name}</option>
         ))}
       </select>
-      <button
-        disabled={!newAccount}
-        onClick={() => setShowNewAccountForm(true)}
-      >
-        Add account
-      </button>
-      {showNewAccountForm && !!newAccount && (
+      <button onClick={() => setShowNewAccountForm(true)}>Add account</button>
+      {showNewAccountForm && (
         <AccountNameForm
           newAccount={newAccount}
           onClose={() => setShowNewAccountForm(false)}

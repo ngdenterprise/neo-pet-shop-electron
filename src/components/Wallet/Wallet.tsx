@@ -28,7 +28,6 @@ export default function Wallet({
   unlockWallet,
 }: Props) {
   const [showNewWalletForm, setShowNewWalletForm] = useState(false);
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
   return (
     <div
       style={{
@@ -46,9 +45,7 @@ export default function Wallet({
           <AccountSelector
             accounts={walletState.accounts}
             selectedAccount={walletState.selectedAccount}
-            newAccount={
-              walletState.lockState === "unlocked" ? newAccount : undefined
-            }
+            newAccount={newAccount}
             selectAccount={selectAccount}
           />
         </>
@@ -59,11 +56,6 @@ export default function Wallet({
           pets.
           <button onClick={() => setShowNewWalletForm(true)}>New</button>
           <button onClick={openWallet}>Open</button>
-        </>
-      )}
-      {!!walletState && walletState.lockState !== "unlocked" && (
-        <>
-          <button onClick={() => setShowPasswordForm(true)}>Unlock</button>
         </>
       )}
       {!!walletState && (
@@ -77,10 +69,10 @@ export default function Wallet({
           onClose={() => setShowNewWalletForm(false)}
         />
       )}
-      {showPasswordForm && (
+      {walletState?.lockState === "locked" && (
         <WalletPasswordForm
           unlockWallet={unlockWallet}
-          onClose={() => setShowPasswordForm(false)}
+          onCancel={closeWallet}
         />
       )}
     </div>
