@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import ContractState from "../../../src-shared/ContractState";
+import LoadingIndicator from "../LoadingIndicator";
 import PetShop from "../PetShop/PetShop";
 import SplashScreen from "./SplashScreen";
 import Wallet from "../Wallet/Wallet";
@@ -15,6 +16,7 @@ const TARGET_ORIGIN = "file://";
 export default function Dapp() {
   const [contractState, setContractState] =
     useState<ContractState | null>(null);
+  const [pendingTxs, setPendingTxs] = useState<string[]>([]);
   const [walletState, setWalletState] = useState<WalletState | null>(null);
 
   useEffect(() => {
@@ -24,6 +26,9 @@ export default function Dapp() {
       console.log("[client] <-", message);
       if (message.contractState !== undefined) {
         setContractState(message.contractState);
+      }
+      if (message.pendingTxs !== undefined) {
+        setPendingTxs(message.pendingTxs);
       }
       if (message.walletState !== undefined) {
         setWalletState(message.walletState);
@@ -40,7 +45,7 @@ export default function Dapp() {
   };
 
   const feed = async (petId: number) => {
-    // TODO
+    window.parent.postMessage({ feed: { petId } }, TARGET_ORIGIN);
   };
 
   const newAccount = async (name: string) => {
@@ -83,6 +88,7 @@ export default function Dapp() {
           selectAccount={selectAccount}
           unlockWallet={unlockWallet}
         />
+        <LoadingIndicator pendingTxs={pendingTxs} />
       </>
     );
   }

@@ -20,31 +20,16 @@ export default class PetShopContract {
     private readonly networkMagic: number
   ) {}
 
-  async adopt(petId: number, account: neonCore.wallet.Account) {
-    const script = neonCore.sc.createScript({
-      scriptHash: this.contractHash,
-      operation: "adoptPet",
-      args: [neonCore.sc.ContractParam.integer(petId)],
-    });
-    const currentHeight = await this.rpcClient.getBlockCount();
-    const transaction = new neonCore.tx.Transaction({
-      validUntilBlock:
-        currentHeight + neonCore.tx.Transaction.MAX_TRANSACTION_LIFESPAN - 1,
-      systemFee: 0,
-      script,
-    });
-    transaction.addSigner({
-      account: account.scriptHash,
-      scopes: "CalledByEntry",
-    });
-    await this.setNetworkFee(transaction);
-    await this.setSystemFee(transaction);
-    const signedTransaction = transaction.sign(
-      account.privateKey,
-      this.networkMagic
-    );
-    console.log("signed tx", signedTransaction);
-    await this.rpcClient.sendRawTransaction(signedTransaction);
+  adopt(petId: number, account: neonCore.wallet.Account) {
+    return this.sendTransaction("adoptPet", account, [
+      neonCore.sc.ContractParam.integer(petId),
+    ]);
+  }
+
+  feed(petId: number, account: neonCore.wallet.Account) {
+    return this.sendTransaction("feed", account, [
+      neonCore.sc.ContractParam.integer(petId),
+    ]);
   }
 
   async getContractState(): Promise<ContractState> {
@@ -74,6 +59,38 @@ export default class PetShopContract {
       updatedContractState.pets[petId] = { petId, isHungry, owner, lastFed };
     }
     return updatedContractState;
+  }
+
+  private async sendTransaction(
+    operation: string,
+    account: neonCore.wallet.Account,
+    args: neonCore.sc.ContractParam[]
+  ) {
+    // TODO: Error handling (catch exceptions and expose to UI)
+    // TODO: Add a confirmation flow so the user sees how much GAS they are about to
+    //       spend before the tx is actually submitted.
+    const script = neonCore.sc.createScript({
+      scriptHash: this.contractHash,
+      operation,
+      args,
+    });
+    const currentHeight = await this.rpcClient.getBlockCount();
+    const transaction = new neonCore.tx.Transaction({
+      validUntilBlock:
+        currentHeight + neonCore.tx.Transaction.MAX_TRANSACTION_LIFESPAN - 1,
+      systemFee: 0,
+      script,
+      signers: [{ account: account.scriptHash, scopes: "CalledByEntry" }],
+    });
+    await this.setNetworkFee(transaction);
+    await this.setSystemFee(transaction);
+    const signedTransaction = transaction.sign(
+      account.privateKey,
+      this.networkMagic
+    );
+    const txid = await this.rpcClient.sendRawTransaction(signedTransaction);
+    console.log(`TXID ${txid} (${operation}) submitted`);
+    return txid;
   }
 
   private async setNetworkFee(transaction: neonCore.tx.Transaction) {

@@ -52,6 +52,24 @@ const contract = new PetShopContract(
   blockchainParameters.magic
 );
 
+let pendingTxs: string[] = [];
+new BlockchainMonitor(rpcClient, async () => {
+  const contractState = await contract.getContractState();
+  const newPendingTxs: string[] = [];
+  for (const pendingTx of pendingTxs) {
+    try {
+      if (!(await rpcClient.getRawTransaction(pendingTx))) {
+        newPendingTxs.push(pendingTx);
+      }
+    } catch (e) {
+      console.warn(`Waiting for tx ${pendingTx} to confirm: ${e.message}`);
+      newPendingTxs.push(pendingTx);
+    }
+  }
+  pendingTxs = newPendingTxs;
+  postMessageToFrame({ contractState, pendingTxs });
+});
+
 window.addEventListener("load", () => {
   window.addEventListener("message", async (e) => {
     const message = e.data;
@@ -60,13 +78,22 @@ window.addEventListener("load", () => {
     if (message.adopt?.petId !== undefined) {
       const account = wallet.getAccount();
       if (account) {
-        await contract.adopt(message.adopt?.petId, account);
+        pendingTxs.push(await contract.adopt(message.adopt?.petId, account));
+        postMessageToFrame({ pendingTxs });
       }
     }
 
     if (message.closeWallet) {
       wallet.close();
       postMessageToFrame({ walletState: wallet.getWalletState() });
+    }
+
+    if (message.feed?.petId !== undefined) {
+      const account = wallet.getAccount();
+      if (account) {
+        pendingTxs.push(await contract.feed(message.feed?.petId, account));
+        postMessageToFrame({ pendingTxs });
+      }
     }
 
     if (message.newAccount?.name) {
@@ -104,9 +131,4 @@ window.addEventListener("load", () => {
       postMessageToFrame({ walletState: wallet.getWalletState() });
     }
   });
-});
-
-new BlockchainMonitor(rpcClient, async () => {
-  const contractState = await contract.getContractState();
-  postMessageToFrame({ contractState });
 });
