@@ -16,6 +16,7 @@ export default function AccountNameForm({ newAccount, onClose }: Props) {
   return (
     <Dialog>
       <LabeledInput
+        autoFocus
         label="Enter a name for the new account"
         value={name}
         onChange={(e) => setName(e.target.value)}

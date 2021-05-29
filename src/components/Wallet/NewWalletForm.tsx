@@ -17,6 +17,7 @@ export default function NewWalletForm({ newWallet, onClose }: Props) {
   return (
     <Dialog>
       <LabeledInput
+        autoFocus
         label="Enter a name for your new wallet"
         value={name}
         onChange={(e) => setName(e.target.value)}

@@ -16,6 +16,7 @@ export default function WalletPasswordForm({ unlockWallet, onCancel }: Props) {
   return (
     <Dialog>
       <LabeledInput
+        autoFocus
         label="Enter the password for your wallet"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
