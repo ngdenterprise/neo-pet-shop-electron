@@ -18,6 +18,7 @@ export default function Dapp() {
   const [contractState, setContractState] =
     useState<ContractState | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [pendingTxs, setPendingTxs] = useState<string[]>([]);
   const [walletState, setWalletState] = useState<WalletState | null>(null);
 
@@ -31,6 +32,9 @@ export default function Dapp() {
       }
       if (message.error !== undefined) {
         setError(message.error);
+      }
+      if (message.loading !== undefined) {
+        setLoading(message.loading);
       }
       if (message.pendingTxs !== undefined) {
         setPendingTxs(message.pendingTxs);
@@ -96,6 +100,7 @@ export default function Dapp() {
         <LoadingIndicator visible={pendingTxs.length > 0}>
           Awaiting confirmation&hellip;
         </LoadingIndicator>
+        <LoadingIndicator visible={loading}>Loading&hellip;</LoadingIndicator>
         <ErrorDisplay error={error} dismiss={() => setError(null)} />
       </>
     );

@@ -79,8 +79,9 @@ window.addEventListener("load", () => {
       if (message.adopt?.petId !== undefined) {
         const account = wallet.getAccount();
         if (account) {
+          postMessageToFrame({ loading: true });
           pendingTxs.push(await contract.adopt(message.adopt?.petId, account));
-          postMessageToFrame({ pendingTxs });
+          postMessageToFrame({ loading: false, pendingTxs });
         }
       }
 
@@ -92,33 +93,46 @@ window.addEventListener("load", () => {
       if (message.feed?.petId !== undefined) {
         const account = wallet.getAccount();
         if (account) {
+          postMessageToFrame({ loading: true });
           pendingTxs.push(await contract.feed(message.feed?.petId, account));
-          postMessageToFrame({ pendingTxs });
+          postMessageToFrame({ loading: false, pendingTxs });
         }
       }
 
       if (message.newAccount?.name) {
+        postMessageToFrame({ loading: true });
         await wallet.newAccount(message.newAccount.name);
-        postMessageToFrame({ walletState: wallet.getWalletState() });
+        postMessageToFrame({
+          loading: false,
+          walletState: wallet.getWalletState(),
+        });
       }
 
       if (message.newWallet?.name && message.newWallet?.password) {
         const path = getSavePath();
         if (path) {
+          postMessageToFrame({ loading: true });
           await wallet.createNew(
             message.newWallet.name,
             message.newWallet.password,
             path
           );
-          postMessageToFrame({ walletState: wallet.getWalletState() });
+          postMessageToFrame({
+            loading: false,
+            walletState: wallet.getWalletState(),
+          });
         }
       }
 
       if (message.openWallet) {
         const path = getOpenPath();
         if (path && path[0]) {
+          postMessageToFrame({ loading: true });
           await wallet.open(path[0]);
-          postMessageToFrame({ walletState: wallet.getWalletState() });
+          postMessageToFrame({
+            loading: false,
+            walletState: wallet.getWalletState(),
+          });
         }
       }
 
@@ -128,12 +142,16 @@ window.addEventListener("load", () => {
       }
 
       if (message.unlockWallet?.password !== undefined) {
+        postMessageToFrame({ loading: true });
         await wallet.unlock(message.unlockWallet.password);
-        postMessageToFrame({ walletState: wallet.getWalletState() });
+        postMessageToFrame({
+          loading: false,
+          walletState: wallet.getWalletState(),
+        });
       }
     } catch (e) {
       console.error("Sending error to UI", e);
-      postMessageToFrame({ error: e.message || `${e}` });
+      postMessageToFrame({ error: e.message || `${e}`, loading: false });
     }
   });
 });
