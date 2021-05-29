@@ -14,7 +14,7 @@ type Props = {
 export default function WalletPasswordForm({ unlockWallet, onCancel }: Props) {
   const [password, setPassword] = useState("");
   return (
-    <Dialog>
+    <Dialog defaultAction={() => unlockWallet(password)}>
       <LabeledInput
         autoFocus
         label="Enter the password for your wallet"

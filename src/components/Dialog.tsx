@@ -4,12 +4,13 @@ import CenterInScreen from "./CenterInScreen";
 
 type Props = {
   children: any;
+  defaultAction?: () => void;
 };
 
 /**
  * Displays arbitary content stacked in a modal dialog
  */
-export default function NewWalletForm({ children }: Props) {
+export default function NewWalletForm({ children, defaultAction }: Props) {
   return (
     <div
       style={{
@@ -22,7 +23,7 @@ export default function NewWalletForm({ children }: Props) {
       }}
     >
       <CenterInScreen>
-        <div
+        <form
           style={{
             alignItems: "stretch",
             backgroundColor: "#fff",
@@ -36,9 +37,15 @@ export default function NewWalletForm({ children }: Props) {
             padding: 10,
             textAlign: "center",
           }}
+          onSubmit={(e) => {
+            if (defaultAction) {
+              defaultAction();
+            }
+            e.preventDefault();
+          }}
         >
           {children}
-        </div>
+        </form>
       </CenterInScreen>
     </div>
   );

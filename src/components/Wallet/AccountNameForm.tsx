@@ -13,8 +13,12 @@ type Props = {
  */
 export default function AccountNameForm({ newAccount, onClose }: Props) {
   const [name, setName] = useState("");
+  const onSubmit = async () => {
+    await newAccount(name);
+    onClose();
+  };
   return (
-    <Dialog>
+    <Dialog defaultAction={onSubmit}>
       <LabeledInput
         autoFocus
         label="Enter a name for the new account"
@@ -22,14 +26,7 @@ export default function AccountNameForm({ newAccount, onClose }: Props) {
         onChange={(e) => setName(e.target.value)}
       />
       <div>
-        <button
-          onClick={async () => {
-            await newAccount(name);
-            onClose();
-          }}
-        >
-          Create account
-        </button>
+        <button onClick={onSubmit}>Create account</button>
       </div>
       <div>
         <button onClick={onClose}>Cancel</button>

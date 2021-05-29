@@ -14,8 +14,14 @@ type Props = {
 export default function NewWalletForm({ newWallet, onClose }: Props) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const onSubmit = async () => {
+    if (!!name && !!password) {
+      await newWallet(name, password);
+      onClose();
+    }
+  };
   return (
-    <Dialog>
+    <Dialog defaultAction={onSubmit}>
       <LabeledInput
         autoFocus
         label="Enter a name for your new wallet"
@@ -28,13 +34,7 @@ export default function NewWalletForm({ newWallet, onClose }: Props) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
-        <button
-          disabled={!name || !password}
-          onClick={async () => {
-            await newWallet(name, password);
-            onClose();
-          }}
-        >
+        <button disabled={!name || !password} onClick={onSubmit}>
           Save wallet
         </button>
       </div>
