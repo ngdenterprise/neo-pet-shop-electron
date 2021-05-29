@@ -3,7 +3,7 @@ import * as neonCore from "@cityofzion/neon-core";
 
 import WalletState from "../src-shared/WalletState";
 
-type LockState = "locked" | "unlocked" | "error";
+type LockState = "locked" | "unlocked";
 
 type State = {
   wallet: neonCore.wallet.Wallet;
@@ -101,8 +101,9 @@ export default class Wallet {
       path,
     };
     // Attempt to unlock with an empty password:
-    await this.unlock("");
-    if (this.state.lockState === "error") {
+    try {
+      await this.unlock("");
+    } catch (e) {
       this.state.lockState = "locked";
     }
   }
@@ -121,18 +122,14 @@ export default class Wallet {
     if (!this.state) {
       return;
     }
-    try {
-      const results = await this.state.wallet.decryptAll(password);
-      if (results.indexOf(false) !== -1) {
-        this.state.lockState = "error";
-        this.state.password = null;
-      } else {
-        this.state.lockState = "unlocked";
-        this.state.password = password;
-      }
-    } catch (e) {
-      this.state.lockState = "error";
+    const results = await this.state.wallet.decryptAll(password);
+    if (results.indexOf(false) !== -1) {
+      this.state.lockState = "locked";
       this.state.password = null;
+      throw new Error("Wrong password");
+    } else {
+      this.state.lockState = "unlocked";
+      this.state.password = password;
     }
   }
 }

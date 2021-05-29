@@ -2,7 +2,7 @@ type WalletState = {
   name: string;
   accounts: string[];
   selectedAccount: number;
-  lockState: "locked" | "unlocked" | "error";
+  lockState: "locked" | "unlocked";
 };
 
 export default WalletState;
