@@ -1,15 +1,15 @@
 import React from "react";
 
 type Props = {
-  pendingTxs: string[];
+  children: any;
+  visible: boolean;
 };
 
 /**
- * Provides a visual hint that a transaction was recently submitted but has
- * not yet been confirmed.
+ * Provides a visual hint that an operation is in progress.
  */
-export default function LoadingIndicator({ pendingTxs }: Props) {
-  if (pendingTxs.length === 0) {
+export default function LoadingIndicator({ children, visible }: Props) {
+  if (!visible) {
     return <></>;
   }
   return (
@@ -24,7 +24,7 @@ export default function LoadingIndicator({ pendingTxs }: Props) {
         right: 10,
       }}
     >
-      Awaiting confirmation&hellip;
+      {children}
     </div>
   );
 }

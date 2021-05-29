@@ -93,7 +93,9 @@ export default function Dapp() {
           selectAccount={selectAccount}
           unlockWallet={unlockWallet}
         />
-        <LoadingIndicator pendingTxs={pendingTxs} />
+        <LoadingIndicator visible={pendingTxs.length > 0}>
+          Awaiting confirmation&hellip;
+        </LoadingIndicator>
         <ErrorDisplay error={error} dismiss={() => setError(null)} />
       </>
     );
