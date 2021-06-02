@@ -30,6 +30,7 @@ export default function PetShop({
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "space-evenly",
+        overflow: "auto",
       }}
     >
       {contractState.pets.map((_) => (

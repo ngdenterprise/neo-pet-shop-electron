@@ -82,25 +82,40 @@ export default function Dapp() {
   } else {
     return (
       <>
-        <PetShop
-          contractState={contractState}
-          disabled={walletState?.lockState !== "unlocked"}
-          adopt={adopt}
-          feed={feed}
-        />
-        <Wallet
-          walletState={walletState}
-          closeWallet={closeWallet}
-          newAccount={newAccount}
-          newWallet={newWallet}
-          openWallet={openWallet}
-          selectAccount={selectAccount}
-          unlockWallet={unlockWallet}
-        />
+        <div
+          style={{
+            bottom: 0,
+            display: "grid",
+            gridTemplateColumns: "auto",
+            gridTemplateRows: "[wallet] auto [shop] 1fr",
+            left: 0,
+            position: "fixed",
+            right: 0,
+            top: 0,
+          }}
+        >
+          <Wallet
+            walletState={walletState}
+            closeWallet={closeWallet}
+            newAccount={newAccount}
+            newWallet={newWallet}
+            openWallet={openWallet}
+            selectAccount={selectAccount}
+            unlockWallet={unlockWallet}
+          />
+          <PetShop
+            contractState={contractState}
+            disabled={walletState?.lockState !== "unlocked"}
+            adopt={adopt}
+            feed={feed}
+          />
+        </div>
         <LoadingIndicator visible={pendingTxs.length > 0}>
           Awaiting confirmation&hellip;
         </LoadingIndicator>
-        <LoadingIndicator visible={loading}>Loading&hellip;</LoadingIndicator>
+        <LoadingIndicator visible={loading}>
+          Please wait&hellip;
+        </LoadingIndicator>
         <ErrorDisplay error={error} dismiss={() => setError(null)} />
       </>
     );
