@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-
-import AccountNameForm from "./AccountNameForm";
+import React from "react";
 
 type Props = {
   accounts: string[];
   selectedAccount: number;
-  newAccount: (name: string) => Promise<void>;
   selectAccount: (i: number) => Promise<void>;
 };
 
@@ -15,10 +12,8 @@ type Props = {
 export default function AccountSelector({
   accounts,
   selectedAccount,
-  newAccount,
   selectAccount,
 }: Props) {
-  const [showNewAccountForm, setShowNewAccountForm] = useState(false);
   return (
     <>
       <select
@@ -29,13 +24,6 @@ export default function AccountSelector({
           <option key={i}>{name}</option>
         ))}
       </select>
-      <button onClick={() => setShowNewAccountForm(true)}>Add account</button>
-      {showNewAccountForm && (
-        <AccountNameForm
-          newAccount={newAccount}
-          onClose={() => setShowNewAccountForm(false)}
-        />
-      )}
     </>
   );
 }

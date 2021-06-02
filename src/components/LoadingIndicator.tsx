@@ -16,11 +16,12 @@ export default function LoadingIndicator({ children, visible }: Props) {
     <div
       style={{
         backgroundColor: "blueviolet",
-        bottom: 10,
+        borderRadius: 10,
         color: "whitesmoke",
         fontWeight: "bold",
-        padding: 5,
+        padding: 10,
         position: "fixed",
+        top: 10,
         right: 10,
       }}
     >
