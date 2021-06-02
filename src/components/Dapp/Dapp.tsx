@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 import ContractState from "../../../src-shared/ContractState";
 import ErrorDisplay from "../ErrorDisplay";
+import Instructions from "../PetShop/Instructions";
 import LoadingIndicator from "../LoadingIndicator";
 import PetShop from "../PetShop/PetShop";
-import SplashScreen from "./SplashScreen";
+import SplashScreen from "../PetShop/SplashScreen";
 import Wallet from "../Wallet/Wallet";
 import WalletState from "../../../src-shared/WalletState";
 
@@ -86,14 +87,22 @@ export default function Dapp() {
           style={{
             bottom: 0,
             display: "grid",
+            fontFamily: "sans-serif",
             gridTemplateColumns: "auto",
-            gridTemplateRows: "[wallet] auto [shop] 1fr",
+            gridTemplateRows: "auto 1fr auto",
             left: 0,
             position: "fixed",
             right: 0,
             top: 0,
           }}
         >
+          <Instructions />
+          <PetShop
+            contractState={contractState}
+            disabled={walletState?.lockState !== "unlocked"}
+            adopt={adopt}
+            feed={feed}
+          />
           <Wallet
             walletState={walletState}
             closeWallet={closeWallet}
@@ -102,12 +111,6 @@ export default function Dapp() {
             openWallet={openWallet}
             selectAccount={selectAccount}
             unlockWallet={unlockWallet}
-          />
-          <PetShop
-            contractState={contractState}
-            disabled={walletState?.lockState !== "unlocked"}
-            adopt={adopt}
-            feed={feed}
           />
         </div>
         <LoadingIndicator visible={pendingTxs.length > 0}>
