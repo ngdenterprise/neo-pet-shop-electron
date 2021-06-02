@@ -2,6 +2,7 @@ import React from "react";
 
 type Props = {
   autoFocus?: boolean;
+  disabled?: boolean;
   label: string;
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -12,6 +13,7 @@ type Props = {
  */
 export default function LabeledInput({
   autoFocus,
+  disabled,
   label,
   value,
   onChange,
@@ -28,6 +30,7 @@ export default function LabeledInput({
       {label}
       <input
         autoFocus={autoFocus}
+        disabled={disabled}
         style={{ width: "80%", margin: 10, padding: 10 }}
         type="text"
         value={value}
