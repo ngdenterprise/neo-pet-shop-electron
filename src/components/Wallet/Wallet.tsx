@@ -48,6 +48,7 @@ export default function Wallet({
             newAccount={newAccount}
             selectAccount={selectAccount}
           />{" "}
+          <strong>Address:</strong> {walletState.receiveAddress}{" "}
           <strong>GAS balance:</strong>{" "}
           {(parseInt(walletState.gasBalance) / 100000000).toFixed(2)}
         </>

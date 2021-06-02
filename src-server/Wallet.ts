@@ -58,9 +58,8 @@ export default class Wallet {
         this.state.selectedAccount
       )
     );
-    const balances = await this.rpcClient.getNep17Balances(
-      this.state.wallet.accounts[selectedAccount].address
-    );
+    const receiveAddress = this.state.wallet.accounts[selectedAccount].address;
+    const balances = await this.rpcClient.getNep17Balances(receiveAddress);
     const gasBalance =
       balances.balance.find(
         (_) =>
@@ -70,6 +69,7 @@ export default class Wallet {
       accounts: this.state.wallet.accounts.map((_) => _.label),
       gasBalance,
       name: this.state.wallet.name,
+      receiveAddress,
       selectedAccount,
       lockState: this.state.lockState,
     };
