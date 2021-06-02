@@ -4,13 +4,8 @@ import * as neonCore from "@cityofzion/neon-core";
 import BlockchainMonitor from "./BlockchainMonitor";
 import BlockchainParameters from "./BlockchainParameters";
 import PetShopContract from "./PetShopContract";
+import reverseHexString from "./reverseHexString";
 import Wallet from "./Wallet";
-
-const reverseHexString = (hexString: string) =>
-  hexString
-    .match(/[a-fA-F0-9]{2}/g)
-    ?.reverse()
-    .join("");
 
 const TESTNET: BlockchainParameters = {
   rpcUrl: "http://seed3t.neo.org:20332",

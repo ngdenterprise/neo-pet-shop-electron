@@ -1,12 +1,15 @@
 import * as neonCore from "@cityofzion/neon-core";
 
 import ContractState from "../src-shared/ContractState";
+import reverseHexString from "./reverseHexString";
 
 const decodeAddress = (base64EncodedAddress?: string) => {
   if (!base64EncodedAddress) {
     return undefined;
   }
-  const scriptHash = neonCore.u.str2hexstring(atob(base64EncodedAddress));
+  const scriptHash = reverseHexString(
+    neonCore.u.str2hexstring(atob(base64EncodedAddress))
+  );
   if (scriptHash === "0000000000000000000000000000000000000000") {
     return undefined;
   }
