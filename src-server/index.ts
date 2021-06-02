@@ -34,8 +34,6 @@ const postMessageToFrame = (message: any) => {
   document.querySelector("iframe")?.contentWindow?.postMessage(message, "*");
 };
 
-const wallet = new Wallet();
-
 const getOpenPath = () => {
   return electron.ipcRenderer.sendSync("get-open-path") as string[] | undefined;
 };
@@ -46,6 +44,8 @@ const getSavePath = () => {
 
 const rpcClient = new neonCore.rpc.RPCClient(blockchainParameters.rpcUrl);
 
+const wallet = new Wallet(rpcClient);
+
 const contract = new PetShopContract(
   rpcClient,
   blockchainParameters.contractHash,
@@ -54,7 +54,6 @@ const contract = new PetShopContract(
 
 let pendingTxs: string[] = [];
 new BlockchainMonitor(rpcClient, async () => {
-  const contractState = await contract.getContractState();
   const newPendingTxs: string[] = [];
   for (const pendingTx of pendingTxs) {
     try {
@@ -67,7 +66,12 @@ new BlockchainMonitor(rpcClient, async () => {
     }
   }
   pendingTxs = newPendingTxs;
-  postMessageToFrame({ contractState, pendingTxs });
+  const contractState = await contract.getContractState();
+  postMessageToFrame({
+    contractState,
+    pendingTxs,
+    walletState: await wallet.getWalletState(),
+  });
 });
 
 window.addEventListener("load", () => {
@@ -87,7 +91,7 @@ window.addEventListener("load", () => {
 
       if (message.closeWallet) {
         wallet.close();
-        postMessageToFrame({ walletState: wallet.getWalletState() });
+        postMessageToFrame({ walletState: await wallet.getWalletState() });
       }
 
       if (message.feed?.petId !== undefined) {
@@ -104,7 +108,7 @@ window.addEventListener("load", () => {
         await wallet.newAccount(message.newAccount.name);
         postMessageToFrame({
           loading: false,
-          walletState: wallet.getWalletState(),
+          walletState: await wallet.getWalletState(),
         });
       }
 
@@ -119,7 +123,7 @@ window.addEventListener("load", () => {
           );
           postMessageToFrame({
             loading: false,
-            walletState: wallet.getWalletState(),
+            walletState: await wallet.getWalletState(),
           });
         }
       }
@@ -131,14 +135,14 @@ window.addEventListener("load", () => {
           await wallet.open(path[0]);
           postMessageToFrame({
             loading: false,
-            walletState: wallet.getWalletState(),
+            walletState: await wallet.getWalletState(),
           });
         }
       }
 
       if (message.selectAccount?.i !== undefined) {
         wallet.selectAccount(message.selectAccount.i);
-        postMessageToFrame({ walletState: wallet.getWalletState() });
+        postMessageToFrame({ walletState: await wallet.getWalletState() });
       }
 
       if (message.unlockWallet?.password !== undefined) {
@@ -146,7 +150,7 @@ window.addEventListener("load", () => {
         await wallet.unlock(message.unlockWallet.password);
         postMessageToFrame({
           loading: false,
-          walletState: wallet.getWalletState(),
+          walletState: await wallet.getWalletState(),
         });
       }
     } catch (e) {

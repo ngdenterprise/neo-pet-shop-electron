@@ -16,6 +16,8 @@ type State = {
 export default class Wallet {
   private state: State | null = null;
 
+  constructor(private readonly rpcClient: neonCore.rpc.RPCClient) {}
+
   close() {
     this.state = null;
   }
@@ -45,20 +47,30 @@ export default class Wallet {
     return this.state?.wallet.accounts[this.state.selectedAccount] || undefined;
   }
 
-  getWalletState(): WalletState | null {
+  async getWalletState(): Promise<WalletState | null> {
     if (!this.state) {
       return null;
     }
+    const selectedAccount = Math.max(
+      0,
+      Math.min(
+        this.state.wallet.accounts.length - 1,
+        this.state.selectedAccount
+      )
+    );
+    const balances = await this.rpcClient.getNep17Balances(
+      this.state.wallet.accounts[selectedAccount].address
+    );
+    const gasBalance =
+      balances.balance.find(
+        (_) =>
+          _.assethash === `0x${neonCore.CONST.NATIVE_CONTRACT_HASH.GasToken}`
+      )?.amount || "0";
     return {
       accounts: this.state.wallet.accounts.map((_) => _.label),
+      gasBalance,
       name: this.state.wallet.name,
-      selectedAccount: Math.max(
-        0,
-        Math.min(
-          this.state.wallet.accounts.length - 1,
-          this.state.selectedAccount
-        )
-      ),
+      selectedAccount,
       lockState: this.state.lockState,
     };
   }

@@ -47,7 +47,9 @@ export default function Wallet({
             selectedAccount={walletState.selectedAccount}
             newAccount={newAccount}
             selectAccount={selectAccount}
-          />
+          />{" "}
+          <strong>GAS balance:</strong>{" "}
+          {(parseInt(walletState.gasBalance) / 100000000).toFixed(2)}
         </>
       )}
       {!walletState && (
