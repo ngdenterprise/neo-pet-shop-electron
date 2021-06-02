@@ -4,20 +4,17 @@ import * as neonCore from "@cityofzion/neon-core";
 import BlockchainMonitor from "./BlockchainMonitor";
 import BlockchainParameters from "./BlockchainParameters";
 import PetShopContract from "./PetShopContract";
-import reverseHexString from "./reverseHexString";
 import Wallet from "./Wallet";
 
 const TESTNET: BlockchainParameters = {
   rpcUrl: "http://seed3t.neo.org:20332",
-  contractHash:
-    "0x" + reverseHexString("bac8fe4db61f69bde42c85a880ebb31f1fcfd1ba"),
+  contractHash: "0xbad1cf1f1fb3eb80a8852ce4bd691fb64dfec8ba",
   magic: neonCore.CONST.MAGIC_NUMBER.TestNet,
 };
 
 const PRIVATENET: BlockchainParameters = {
   rpcUrl: "http://127.0.0.1:50012",
-  contractHash:
-    "0x" + reverseHexString("9c6cc77576574a6227612e920533a61af798f265"),
+  contractHash: "0x65f298f71aa63305922e6127624a577675c76c9c",
   magic: neonCore.CONST.MAGIC_NUMBER.SoloNet,
 };
 
