@@ -66,7 +66,6 @@ export default class PetShopContract {
     account: neonCore.wallet.Account,
     args: neonCore.sc.ContractParam[]
   ) {
-    // TODO: Error handling (catch exceptions and expose to UI)
     // TODO: Add a confirmation flow so the user sees how much GAS they are about to
     //       spend before the tx is actually submitted.
     const script = neonCore.sc.createScript({
