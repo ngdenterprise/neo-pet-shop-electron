@@ -1,5 +1,16 @@
 import React from "react";
 
+const PETS = [
+  { emoji: "🦜", name: "Percy" },
+  { emoji: "🐈", name: "Clarence" },
+  { emoji: "🦎", name: "Loopy" },
+  { emoji: "🐕", name: "Nico" },
+  { emoji: "🦔", name: "Humphry" },
+  { emoji: "🐇", name: "Randy" },
+  { emoji: "🐠", name: "Frederick" },
+  { emoji: "🐒", name: "Michael" },
+];
+
 type Props = {
   disabled?: boolean;
   isHungry: boolean;
@@ -22,10 +33,12 @@ export default function Pet({
   adoptMe,
   feedMe,
 }: Props) {
+  const pet = PETS[petId] || { emoji: "👻", name: "0x000000" };
   return (
     <div style={{ margin: 10, padding: 10, textAlign: "center" }}>
+      <div style={{ fontSize: 120 }}>{pet.emoji}</div>
       <div>
-        <strong>Pet {petId}</strong>
+        <strong>{pet.name}</strong>
       </div>
       {isHungry && (
         <div>
