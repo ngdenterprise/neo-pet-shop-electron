@@ -86,11 +86,6 @@ export default function Wallet({
             <div style={{ gridArea: "balance" }}>
               {(parseInt(walletState.gasBalance) / 100000000).toFixed(2)} GAS
             </div>
-            <button style={{ gridArea: "action1" }} onClick={closeWallet}>
-              <Icon emoji="❌" />
-              <br />
-              Close wallet
-            </button>
             <button
               style={{ gridArea: "action2" }}
               onClick={() => setShowNewAccountForm(true)}
@@ -98,6 +93,11 @@ export default function Wallet({
               <Icon emoji="➕" />
               <br />
               Add account
+            </button>
+            <button style={{ gridArea: "action1" }} onClick={closeWallet}>
+              <Icon emoji="❌" />
+              <br />
+              Close wallet
             </button>
           </div>
         )}
