@@ -31,6 +31,7 @@ export default function PetShop({
         flexWrap: "wrap",
         justifyContent: "space-evenly",
         overflow: "auto",
+        paddingTop: 30,
       }}
     >
       {contractState.pets.map((_) => (
