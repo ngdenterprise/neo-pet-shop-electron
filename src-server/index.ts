@@ -18,8 +18,8 @@ const PRIVATENET: BlockchainParameters = {
   magic: 3345620479,
 };
 
-// const blockchainParameters = TESTNET;
-const blockchainParameters = PRIVATENET;
+const blockchainParameters = TESTNET;
+// const blockchainParameters = PRIVATENET;
 
 const postMessageToFrame = (message: any) => {
   console.log("[server] ->", message);
