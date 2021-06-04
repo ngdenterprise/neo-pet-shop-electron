@@ -14,7 +14,7 @@ export default function NewWalletForm({ children, defaultAction }: Props) {
   return (
     <div
       style={{
-        backgroundColor: "rgba(255,255,255,0.5)",
+        backgroundColor: "rgba(100,100,100,0.75)",
         bottom: 0,
         left: 0,
         position: "fixed",
@@ -27,7 +27,7 @@ export default function NewWalletForm({ children, defaultAction }: Props) {
           style={{
             alignItems: "stretch",
             backgroundColor: "#fff",
-            border: "1px solid #000",
+            border: "5px solid mediumaquamarine",
             borderRadius: 10,
             display: "flex",
             flexDirection: "column",

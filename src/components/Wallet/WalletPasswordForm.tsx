@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import Dialog from "../Dialog";
+import Icon from "./Icon";
 import LabeledInput from "../LabeledInput";
 
 type Props = {
@@ -20,6 +21,7 @@ export default function WalletPasswordForm({ unlockWallet, onCancel }: Props) {
         autoFocus
         disabled={unlockPending}
         label="Enter the password for your wallet"
+        type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -31,6 +33,8 @@ export default function WalletPasswordForm({ unlockWallet, onCancel }: Props) {
             unlockWallet(password);
           }}
         >
+          <Icon emoji="🔓" />
+          <br />
           Unlock wallet
         </button>
       </div>

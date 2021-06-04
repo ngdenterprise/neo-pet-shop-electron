@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import Dialog from "../Dialog";
+import Icon from "./Icon";
 import LabeledInput from "../LabeledInput";
 
 type Props = {
@@ -22,11 +23,16 @@ export default function AccountNameForm({ newAccount, onClose }: Props) {
       <LabeledInput
         autoFocus
         label="Enter a name for the new account"
+        type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <div>
-        <button onClick={onSubmit}>Create account</button>
+        <button onClick={onSubmit}>
+          <Icon emoji="💾" />
+          <br />
+          Create account
+        </button>
       </div>
       <div>
         <button onClick={onClose}>Cancel</button>

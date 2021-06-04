@@ -4,6 +4,7 @@ type Props = {
   autoFocus?: boolean;
   disabled?: boolean;
   label: string;
+  type: "text" | "password";
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
@@ -15,6 +16,7 @@ export default function LabeledInput({
   autoFocus,
   disabled,
   label,
+  type,
   value,
   onChange,
 }: Props) {
@@ -32,7 +34,7 @@ export default function LabeledInput({
         autoFocus={autoFocus}
         disabled={disabled}
         style={{ width: "80%", margin: 10, padding: 10 }}
-        type="text"
+        type={type}
         value={value}
         onChange={onChange}
       />
