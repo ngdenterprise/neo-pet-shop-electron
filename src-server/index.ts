@@ -14,12 +14,12 @@ const TESTNET: BlockchainParameters = {
 
 const PRIVATENET: BlockchainParameters = {
   rpcUrl: "http://127.0.0.1:50012",
-  contractHash: "0x65f298f71aa63305922e6127624a577675c76c9c",
-  magic: neonCore.CONST.MAGIC_NUMBER.SoloNet,
+  contractHash: "0xfb1bdf761a98c0127a55740076d755d222d14f7f",
+  magic: 3345620479,
 };
 
-const blockchainParameters = TESTNET;
-// const blockchainParameters = PRIVATENET;
+// const blockchainParameters = TESTNET;
+const blockchainParameters = PRIVATENET;
 
 const postMessageToFrame = (message: any) => {
   console.log("[server] ->", message);
