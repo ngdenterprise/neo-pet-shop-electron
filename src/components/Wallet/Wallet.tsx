@@ -69,7 +69,7 @@ export default function Wallet({
               alignItems: "center",
               display: "grid",
               columnGap: 5,
-              gridTemplate: `"avatar address action1 action2" auto "avatar balance action1 action2" auto / auto 1fr auto auto`,
+              gridTemplate: `"avatar address action1 action2" auto "avatar balance action1 action2" auto / 1fr 5fr auto auto`,
               textAlign: "center",
             }}
           >
