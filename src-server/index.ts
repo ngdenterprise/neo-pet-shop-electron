@@ -49,7 +49,8 @@ new BlockchainMonitor(rpcClient, async () => {
   const newPendingTxs: string[] = [];
   for (const pendingTx of pendingTxs) {
     try {
-      if (!(await rpcClient.getRawTransaction(pendingTx))) {
+      const tx = await rpcClient.getRawTransaction(pendingTx, true);
+      if (!tx?.blocktime) {
         newPendingTxs.push(pendingTx);
       }
     } catch (e) {
