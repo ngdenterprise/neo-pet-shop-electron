@@ -3,8 +3,8 @@
     "contract": "djnicholson.NeoPetShopContract",
     "operation": "update",
     "args": [
-      "file:///Users/david/github/@ngdenterprise/neo-pet-shop-electron/NeoPetShop/bin/sc/djnicholson.NeoPetShopContract.nef",
-      "file:///Users/david/github/@ngdenterprise/neo-pet-shop-electron/NeoPetShop/bin/sc/djnicholson.NeoPetShopContract.manifest.json"
+      "file://../NeoPetShop/bin/sc/djnicholson.NeoPetShopContract.nef",
+      "file://../NeoPetShop/bin/sc/djnicholson.NeoPetShopContract.manifest.json"
     ]
   }
 ]
