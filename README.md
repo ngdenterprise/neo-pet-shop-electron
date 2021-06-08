@@ -10,11 +10,12 @@ This version uses Electron to get around the browser extension issues (wallet).
 
 ## Building and running using N3 TestNet
 
-Clone this repo, change into the repo directlry and then run the `start` script using `npm`:
+Clone this repo, change into the repo directory and then run the `start` script using `npm`:
 
 ```
 git clone git@github.com:ngdenterprise/neo-pet-shop-electron.git
 cd neo-pet-shop-electron
+npm install
 npm run start
 ```
 
