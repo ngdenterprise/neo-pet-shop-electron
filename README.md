@@ -68,6 +68,8 @@ The Electron app will load and operate using the Pet Shop Contract deployed to y
 
 The source code is divided into top-level folders as follows:
 
+- `NeoPetShop`
+  - The C# code for the pet shop smart contract.
 - `public`
   - Minimal JavaScript to launch and interface with the Electron app and minimal HTML/CSS to render the initial (empty) browser window.
 - `src`
